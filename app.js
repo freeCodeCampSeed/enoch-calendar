@@ -6,9 +6,6 @@
 import { Calendar } from './Calendar.js'; //'./public/Cal.js';
 import express from 'express';
 import { spawn } from 'child_process';
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config();
-
 const dispatcher = spawn('node', ['dispatcher.js']);
 
 dispatcher.stdout.on('data', (data) => {
@@ -24,7 +21,7 @@ dispatcher.on('close', (code) => {
 });
 const app = express();
 
-// app.use(express.static('public'));
+app.use(express.static('public'));
 app.use(express.json());
 
 let PORT = process.env.PORT || 3333;
@@ -50,18 +47,18 @@ console.log('Is Holy day: ', holyday) //date.holyday.name)
 function clearBraces(req, res, next) // let sRes = str.length > 2 ? str.substring(1, str.length-1) : '';
 {
 //    req.params.datestring = 'defined'; //!req.params.datestring || decodeURI(req.params.datestring) == '{datestring}' || !decodeURI(req.params.datestring).length <= 2 || decodeURI(req.params.datestring) === 'undefined'  ? 'undefined' : req.params.datestring;  // dt === undefined ? '' : dt; 
-//    req.params.month      = 'defined'; //!req.params.month      || decodeURI(req.params.month)      == '{month}'      || !decodeURI(req.params.month).length <= 2      || decodeURI(req.params.month)      === 'undefined'  ? 'undefined' : req.params.month;   	   // mt === undefined ? '' : mt;
-//    req.params.year       = 'defined'; //!req.params.year       || decodeURI(req.params.year)       == '{year}'       || !decodeURI(req.params.year).length <= 2       || decodeURI(req.params.year) 	     === 'undefined'  ? 'undefined' : req.params.year;   	   // yr === undefined ? '' : yr;
+//    req.params.month      = 'defined'; //!req.params.month      || decodeURI(req.params.month)      == '{month}'      || !decodeURI(req.params.month).length <= 2      || decodeURI(req.params.month) 	 === 'undefined'  ? 'undefined' : req.params.month;   	   // mt === undefined ? '' : mt;
+//    req.params.year       = 'defined'; //!req.params.year       || decodeURI(req.params.year) 	  == '{year}'       || !decodeURI(req.params.year).length <= 2       || decodeURI(req.params.year) 	     === 'undefined'  ? 'undefined' : req.params.year;   	   // yr === undefined ? '' : yr;
 
    next();
 }
 
 // app.use(clearBraces);
-// app.use(express.static('public'))
+app.use(express.static('public'))
 
-app.get('/', (req, res) => {
-    res.send(`Enoch Calendar`);
- });
+// app.get('/', (req, res) => {
+//     res.send(`Enoch Calendar`);
+// });
 
 app.get('/date/:datestring?', clearBraces, (req, res) => {
     if ( req.params.datestring !== 'undefined' )
@@ -129,11 +126,11 @@ app.get('/is-holyday/:datestring?', clearBraces, (req, res) => {
         res.send({holyday});
 });
 
-// app.get('/full-date', (req, res) => { // formatted, full date at
+// app.get('/at', (req, res) => { // formatted, full date at
 //     res.send({fulldate});
-//  });
+// });
 
-app.get('/date-elements/:month?/:year?', (req, res) => { // return a all the days, sabbaths, holy days and eng_day and eng_date in requested Hebrew month number
+app.get('/date-elements/:month?/:year?', (req, res) => { // return a all the days, sabbaths, holy days and eng_day and eng_date in requested month
 
 /* Get eng_date
 let month = 9;
@@ -163,7 +160,8 @@ console.log(new Date(eng_date.getTime()+day_milli).toString(), eng_date.toString
     let holydays = cal.holydays(month);
     let startdaycount = startdays[parseInt(month)-1] || null;
     let yearOffset = month == 11 || month == 12 ? year-1 : year;
-    let dateFirstOfYear = new Date(yearOffset +'-03-17T05:46:00');
+    let firstOfYear = new Date().getFullYear()%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
+    let dateFirstOfYear = new Date(yearOffset + firstOfYear);
     let sabbathday = daysofweek[dateFirstOfYear.getDay()-1]
     let numberOfDays = startdaycount*day_milli;
     let eng_date_from_hebrew_start_of_month = new Date(dateFirstOfYear.getTime()+(numberOfDays-day_milli));
