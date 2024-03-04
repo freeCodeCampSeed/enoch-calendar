@@ -10,12 +10,16 @@ export class Calendar {
     {
       console.log('atDate: ' + _date);
       let lastYear = parseInt(_date.getFullYear()) - 1;
-      this.d1 = new Date(`${lastYear}-03-17T05:46:00`);
+      let isNotLeap = parseInt(_date.getFullYear())%4;
+      this.day_milli = 86400000;
+      let date_time = lastYear%4 ? '03-17T05:46:00' : '03-16T05:46:00'; // check if last year was leap year, yes ${lastYear}-03-16T05:46:00 else ${lastYear}-03-17T05:46:00
+      this.d1 = new Date(`${lastYear}-${date_time}`); 
       // this.d1 = new Date('2020-03-17T05:46:00');
       // this.number_days_milli = 86400000;
-      this.today = _date; //new Date(); //new Date('2021-03-17T05:46:00');
+      let addLeap = (!isNotLeap && (this.d1.getMonth()==1 && this.d1.getUTCDate()==29)) || ( !isNotLeap && this.d1.getMonth() < 1 ) ? this.day_milli : 0
+      this.today = _date+addLeap; //new Date(); //new Date('2021-03-17T05:46:00');
 
-      this.day_milli = 86400000;
+     
       this.number_days_milli = (this.today - this.d1); //-(day_milli);
 
       // this.total_days = this.number_days_milli/(this.day_milli)
