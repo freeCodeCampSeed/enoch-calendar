@@ -160,7 +160,8 @@ console.log(new Date(eng_date.getTime()+day_milli).toString(), eng_date.toString
     let holydays = cal.holydays(month);
     let startdaycount = startdays[parseInt(month)-1] || null;
     let yearOffset = month == 11 || month == 12 ? year-1 : year;
-    let firstOfYear = new Date().getFullYear()%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
+    // let firstOfYear = new Date().getFullYear()%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
+    let firstOfYear = yearOffset%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
     let dateFirstOfYear = new Date(yearOffset + firstOfYear);
     let sabbathday = daysofweek[dateFirstOfYear.getDay()-1]
     let numberOfDays = startdaycount*day_milli;
