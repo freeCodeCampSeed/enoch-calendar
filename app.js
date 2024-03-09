@@ -138,7 +138,7 @@ function gregorian_calendar_date_from_enoch_first_day(day_num=null, month_num=nu
   let date_str = full_year%4 ? full_year+'-03-17T05:46' : full_year+'-03-16T05:46'
   let d = new Date(date_str);
   let month_day_count = month_num%3 ? 30 : 31; 
-  let enoch_day_num = month_num ? startdays[month_num-1] : day_num ? day_num : false;
+  let enoch_day_num = month_num ? startdays[parseInt(month_num)-1] : day_num ? day_num : false;
   if ( !enoch_day_num ) return false;
   // console.log('Month day count ' + month_day_count)
   
