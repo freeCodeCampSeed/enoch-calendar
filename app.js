@@ -130,6 +130,24 @@ app.get('/is-holyday/:datestring?', clearBraces, (req, res) => {
 //     res.send({fulldate});
 // });
 
+function gregorian_calendar_date_from_enoch_first_day(day_num=null, month_num=null, format=null) // // toString, toISOString
+{
+  let startdays = [1,31,61,92,122,152,183,213,243,274,304,334];
+  let day_milli = 86400000;
+  let full_year = new Date().getFullYear()
+  let date_str = full_year%4 ? full_year+'-03-17T05:46' : full_year+'-03-16T05:46'
+  let d = new Date(date_str);
+  let month_day_count = month_num%3 ? 30 : 31; 
+  let enoch_day_num = month_num ? startdays[month_num-1] : day_num ? day_num : false;
+  if ( !enoch_day_num ) return false;
+  // console.log('Month day count ' + month_day_count)
+  
+  if ( !format )
+    return new Date((d.getTime()-day_milli)+(day_milli*enoch_day_num))
+  else
+    return new Date((d.getTime()-day_milli)+(day_milli*enoch_day_num))[format](); 
+}
+
 app.get('/date-elements/:month?/:year?', (req, res) => { // return a all the days, sabbaths, holy days and eng_day and eng_date in requested month
 
 /* Get eng_date
@@ -162,10 +180,10 @@ console.log(new Date(eng_date.getTime()+day_milli).toString(), eng_date.toString
     let yearOffset = month == 11 || month == 12 ? year-1 : year;
     // let firstOfYear = new Date().getFullYear()%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
     let firstOfYear = yearOffset%4 ? '-03-17T05:46:00' : '-03-16T05:46:00';
-    let dateFirstOfYear = new Date(yearOffset + firstOfYear);
+    let dateFirstOfYear = gregorian_calendar_date_from_enoch_first_day(1) // new Date(yearOffset + firstOfYear);
     let sabbathday = daysofweek[dateFirstOfYear.getDay()-1]
     let numberOfDays = startdaycount*day_milli;
-    let eng_date_from_hebrew_start_of_month = new Date(dateFirstOfYear.getTime()+(numberOfDays-day_milli));
+    let eng_date_from_hebrew_start_of_month = gregorian_calendar_date_from_enoch_first_day(null, month) // new Date(dateFirstOfYear.getTime()+(numberOfDays-day_milli));
     let eng_date = eng_date_from_hebrew_start_of_month;
 
     // let _date = "March 15 " + new Date().toDateString().split(' ')[3]
