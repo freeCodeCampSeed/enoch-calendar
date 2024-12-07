@@ -21,6 +21,7 @@ export class Calendar {
 
      
       this.number_days_milli = (this.today - this.d1); //-(day_milli);
+      this.number_days_milli = new Date(this.today).getTime()-this.d1.getTime(); //(this.today - this.d1);
 
       // this.total_days = this.number_days_milli/(this.day_milli)
       // this.day_of_year = this.total_days - (364);
