@@ -20,7 +20,7 @@ export class Calendar {
       this.today = _date+addLeap; //new Date(); //new Date('2021-03-17T05:46:00');
 
      
-      this.number_days_milli = (this.today - this.d1); //-(day_milli);
+      // this.number_days_milli = (this.today - this.d1); //-(day_milli);
       this.number_days_milli = new Date(this.today).getTime()-this.d1.getTime(); //(this.today - this.d1);
 
       // this.total_days = this.number_days_milli/(this.day_milli)
