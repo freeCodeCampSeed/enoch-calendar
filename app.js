@@ -6,6 +6,8 @@
 import { Calendar } from './Calendar.js'; //'./public/Cal.js';
 import express from 'express';
 import { spawn } from 'child_process';
+import { cors } from 'cors';
+ 
 const dispatcher = spawn('node', ['dispatcher.js']);
 
 dispatcher.stdout.on('data', (data) => {
@@ -23,6 +25,7 @@ const app = express();
 
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cors());
 
 let PORT = process.env.PORT || 3333;
 let cal = new Calendar(); //(new Date('Sep 24 2021 5:46:00'));
